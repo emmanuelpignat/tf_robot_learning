@@ -2,6 +2,16 @@
 
 Author : Emmanuel Pignat, emmanuel.pignat@gmail.com
 
+If you find these codes useful, you can acknowledge the authors by citing the following paper [(Click here to download pdf)](http://calinon.ch/papers/Pignat-CORL2020.pdf):
+
+    @inproceedings{Pignat20CORL,
+        author="Pignat, E. and Girgin, H. and Calinon, S.",
+        title="Generative Adversarial Training of Product of Policies for Robust and Adaptive Movement Primitives",
+        booktitle="Proc.\ Conference on Robot Learning ({CoRL})",
+        year="2020",
+        pages=""
+    }
+
 ## How to install
 
 Is compatible with python 2 and 3, tensorflow 1 and 2
