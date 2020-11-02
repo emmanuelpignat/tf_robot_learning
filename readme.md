@@ -2,7 +2,7 @@
 
 Author : Emmanuel Pignat, emmanuel.pignat@gmail.com
 
-If you find these codes useful, you can acknowledge the authors by citing the following paper [(Click here to download pdf)](http://calinon.ch/papers/Pignat-CORL2020.pdf):
+If you find these codes useful, you can acknowledge the authors by citing the following paper [(Click here to download pdf)](https://github.com/emmanuelpignat/tf_robot_learning/raw/master/publications/pignat_corl2020.pdf):
 
     @inproceedings{Pignat20CORL,
         author="Pignat, E. and Girgin, H. and Calinon, S.",
