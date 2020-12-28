@@ -472,7 +472,7 @@ class ChainDict(OrderedDict, Chain):
 			self.actuated_joint_names
 
 			_joint_limits_all = {}
-			for name, chain in self.iteritems():
+			for name, chain in self.items():
 				for seg in chain.segments:
 					if seg.joint.type == JointType.NoneT: continue
 					_joint_limits_all[seg.child_name] = [seg.joint.limits['low'], seg.joint.limits['up']]
@@ -487,7 +487,7 @@ class ChainDict(OrderedDict, Chain):
 		if self._mean_pose is None:
 
 			_joint_limits_all = {}
-			for name, chain in self.iteritems():
+			for name, chain in self.items():
 				for seg in chain.segments:
 					if seg.joint.type == JointType.NoneT: continue
 					_joint_limits_all[seg.child_name] = np.mean([seg.joint.limits['low'], seg.joint.limits['up']])
@@ -500,26 +500,26 @@ class ChainDict(OrderedDict, Chain):
 	@property
 	def mass(self):
 		if self._mass is None:
-			self._mass = sum([chain.mass for name, chain in self.iteritems()])
+			self._mass = sum([chain.mass for name, chain in self.items()])
 
 		return self._mass
 
 	def plot(self, xs=None, qs=None, *args, **kwargs):
 		if xs is None: raise NotImplementedError
 
-		sess = kwargs.get('sess', tf.get_default_session())
+		sess = kwargs.get('sess', tf.compat.v1.get_default_session())
 		feed_dict = kwargs.get('feed_dict', {})
 
 		# evaluating all the chains here in common is because of random seed that is
 		# different for each chains and results in disconnected robot
 
-		if isinstance(xs.values()[0], np.ndarray):
+		if isinstance(list(xs.values())[0], np.ndarray):
 			_xs = xs
 		else:
 			_xs = {name: val for name, val in
 		 		zip(self, sess.run([xs[name] for name in self], feed_dict=feed_dict))}
 
-		for name, chain in self.iteritems():
+		for name, chain in self.items():
 			chain.plot(xs=_xs[name], *args, **kwargs)
 			kwargs.pop('label', None)
 
@@ -530,24 +530,24 @@ class ChainDict(OrderedDict, Chain):
 			name: [
 				self._unique_names.index(seg.child_name)
 				for seg in chain._segments if seg.joint.type != JointType.NoneT
-			] for name, chain in self.iteritems()
+			] for name, chain in self.items()
 		}
 
 		q_chains = {
 			name: [q[:, i] for i in idx]
-			for name, idx in idx_chain.iteritems()
+			for name, idx in idx_chain.items()
 		}
 
 		if name is None:
 			xs_chains = {
 				name : chain.jacobian(
 					q_chains[name], layout=layout,  n=n, floating_base=floating_base)
-				for name, chain in self.iteritems()
+				for name, chain in self.items()
 			}
 
 			xs_chains_aug = {}
 
-			for name, jac in xs_chains.iteritems():
+			for name, jac in xs_chains.items():
 
 				jacs = [
 					tf.zeros_like(xs_chains[name][:, :, 0])[:, :, None]
@@ -581,19 +581,19 @@ class ChainDict(OrderedDict, Chain):
 			name: [
 				self._unique_names.index(seg.child_name)
 				for seg in chain._segments if seg.joint.type != JointType.NoneT
-			] for name, chain in self.iteritems()
+			] for name, chain in self.items()
 			   }
 
 		q_chains = {
 			name: [q[:, i] for i in idx]
-			for name, idx in idx_chain.iteritems()
+			for name, idx in idx_chain.items()
 		}
 
 		if name is None:
 			xs_chains = {
 				name : chain.xs(
 					q_chains[name], layout=layout, floating_base=floating_base, get_links=get_links)
-				for name, chain in self.iteritems()
+				for name, chain in self.items()
 			}
 
 			if not get_links:
@@ -601,12 +601,12 @@ class ChainDict(OrderedDict, Chain):
 			else:
 				# compute total center of mass
 				mass = tf.reduce_sum(
-					[xs_chains[name][2] * self[name].mass for name, chain in self.iteritems()],
+					[xs_chains[name][2] * self[name].mass for name, chain in self.items()],
 					axis=0)/self.mass
 
 
-				return {name: xs_chains[name][0] for name, chain in self.iteritems()},\
-					   {name: xs_chains[name][1] for name, chain in self.iteritems()},\
+				return {name: xs_chains[name][0] for name, chain in self.items()},\
+					   {name: xs_chains[name][1] for name, chain in self.items()},\
 						mass
 
 
